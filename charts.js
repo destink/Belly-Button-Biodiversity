@@ -3,7 +3,7 @@ function init() {
   var selector = d3.select("#selDataset");
 
   // Use the list of sample names to populate the select options
-  d3.json("data/samples.json").then((data) => {
+  d3.json("samples.json").then((data) => {
     var sampleNames = data.names;
 
     sampleNames.forEach((sample) => {
@@ -58,7 +58,6 @@ function buildMetadata(sample) {
 function buildCharts(sample) {
   // Deliverable 1: 2. Use d3.json to load the samples.json file 
   d3.json("samples.json").then((data) => {
-    console.log(data);
 
     // Deliverable 1: 3. Create a variable that holds the samples array. 
     var sampleArray = data.samples;
@@ -75,45 +74,50 @@ function buildCharts(sample) {
     var otuLabels = sampleHolder.otu_labels;
     var sampleValues = sampleHolder.sample_values
     // Deliverable 3: 3. Create a variable that holds the washing frequency.
-    var washFrequency = parseFloat(metadataHolder.wfreq)
-
+    var washFrequency = parseFloat(metadataHolder.wfreq);
+    
     // Deliverable 1: 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order 
     // so the otu_ids with the most bacteria are last. 
-    let yticks = otuIds.slice(0,10).map(otuID => otuID.reverse());
+    var yticks = otuIds.slice(0,10).reverse().map(otuIDs => otuIDs);
     console.log(yticks)
+
     // Deliverable 1: 8. Create the trace for the bar chart. 
     var barData = [{
+      type: "bar",
       x: sampleValues.slice(0,10).reverse(),
       y: yticks,
       text: otuLabels.slice(0,10).reverse(),
-      type: "bar",
       orientation: "h",
     }];
-    console.log(barData)
     // Deliverable 1: 9. Create the layout for the bar chart. 
     var barLayout = {
       title: "Bacteria Cultures Found",
       xaxis: {title: "Samples"},
-      yaxis: {title: "OTU ID's"}
+      yaxis: {title: "OTU IDs"}
     };
-    console.log(barLayout)
     // Deliverable 1: 10. Use Plotly to plot the data with the layout. 
-    Plotly.newplot("bar-plot", barData, barLayout);
+    Plotly.newPlot("bar", barData, barLayout);
 
     // Deliverable 2: 1. Create the trace for the bubble chart.
     var bubbleData = {
     x: otuIds,
     y: sampleValues,
     text: otuLabels,
+    mode:'markers',
+    marker: {
+      size: "sampleValues",
+      color: "otuIds",
+      }
     }
     // Deliverable 2: 2. Create the layout for the bubble chart.
     var bubbleLayout = {
       title: "Bacteria Cultures Per Sample",
-      xaxis: {title: "OTU ID's"}
+      // xaxis: {title: "OTU ID's"}
     };
     // Deliverable 2: 3. Use Plotly to plot the data with the layout.
-    Plotly.newplot("bubble", bubbleData, bubbleLayout);
+    Plotly.newPlot("bubble", bubbleData, bubbleLayout);
+
     // Deliverable 3: 4. Create the trace for the gauge chart.
     var gaugeData = [{
     domain: {'x':[0,1], 'y':[0,1]},
@@ -134,9 +138,9 @@ function buildCharts(sample) {
 
     // Deliverable 3: 5. Create the layout for the gauge chart.
     var gaugeLayout = {
-      title: "Belly Button Washing Frequency"
-    }
+      title: "Belly Button Washing Frequency",
+    };
     // Deliverable 3: 6. Use Plotly to plot the gauge data and layout.
-    Plotly.newplot("gauge", gaugeData, gaugeLayout);
+    Plotly.newPlot("gauge", gaugeData, gaugeLayout);
   });
 }
