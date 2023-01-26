@@ -113,7 +113,10 @@ function buildCharts(sample) {
     }
     // Deliverable 2: 2. Create the layout for the bubble chart.
     var bubbleLayout = {
-      title: "Bacteria Cultures Per Sample"
+      title: "Bacteria Cultures Per Sample",
+      height: 600,
+      width: 1200
+  };
     };
     // Deliverable 2: 3. Use Plotly to plot the data with the layout.
     Plotly.newPlot("bubble", [bubbleData], bubbleLayout);
